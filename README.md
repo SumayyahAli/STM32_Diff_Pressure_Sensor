@@ -22,6 +22,6 @@ In this Project , I use MPXV7007DP sensor moudule to read Diff Pressure data ...
 <img width="672" alt="image" src="https://github.com/SumayyahAli/STM32_Diff_Pressure_Sensor/assets/66629518/85574c8d-c6be-4444-a636-0048b32791ba">
 
   ## Results
-<img width="491" alt="Screenshot 2024-03-05 230345" src="https://github.com/SumayyahAli/STM32_Diff_Pressure_Sensor/assets/66629518/47f51a4f-b0cb-43dd-a45c-ccb3912666e9">
+<img width="672" alt="Screenshot 2024-03-05 230345" src="https://github.com/SumayyahAli/STM32_Diff_Pressure_Sensor/assets/66629518/47f51a4f-b0cb-43dd-a45c-ccb3912666e9">
 
 
