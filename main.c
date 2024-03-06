@@ -79,9 +79,9 @@ uint8_t EndMSG[] = " Done! \r\n\r\n";
 /*-------- MPXV7007 Sensor var ------------*/
 unsigned char PressSensor_Data[2]; // for 2 bytes "16-bits"
 unsigned short PressSensor_Raw; // The Pressure Sensor Raw Data
-unsigned short PressSensor_eng;
-unsigned short PressSensor_volts;
-char txt[20];
+double PressSensor_eng; //Floating-point 
+double PressSensor_volts; //Floating-point 
+uint8_t txt[128]; //One Buffer enough for all
 char Pressure[20];
 char voltg[20];
 
@@ -144,7 +144,7 @@ int main(void)
           }
           else if(ret == HAL_OK)
           {
-              sprintf(Buffer, "0x%X", i);
+              sprintf((char*)Buffer, "0x%X", i);
               HAL_UART_Transmit(&huart2, Buffer, sizeof(Buffer), 10000);
 
               HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_5);
@@ -161,11 +161,11 @@ int main(void)
 
       if(HAL_I2C_IsDeviceReady(&hi2c1, PressSensor_ADDR, 3, 20) == HAL_OK)
       {
-          HAL_UART_Transmit(&huart2, check1, sizeof(check1), 10000);
+          HAL_UART_Transmit(&huart2, (uint8_t *)check1, sizeof(check1), 10000);
       }
       else
       {
-          HAL_UART_Transmit(&huart2, check2, sizeof(check2), 10000);
+          HAL_UART_Transmit(&huart2, (uint8_t *)check2, sizeof(check2), 10000);
       }
   /* USER CODE END 2 */
 
@@ -179,14 +179,14 @@ int main(void)
      if( HAL_I2C_Master_Receive(&hi2c1, PressSensor_ADDR, PressSensor_Data, 2, 10) == HAL_OK)
      {
     	 char g[]="Data Recevied... \r\n";
-         HAL_UART_Transmit(&huart2, g, sizeof(g), 10);
+         HAL_UART_Transmit(&huart2, (uint8_t *)g, sizeof(g), 10);
          HAL_Delay(1000);
 
      }
      else
      {
-    	 char t[]="ERROR... \r\n";
-    	  HAL_UART_Transmit(&huart2, t, sizeof(t), 10);
+    	 char t_err[]="ERROR... \r\n";
+    	  HAL_UART_Transmit(&huart2, (uint8_t *)t_err, sizeof(t_err), 10);
           HAL_Delay(1000);
 
      }
@@ -197,7 +197,7 @@ int main(void)
       s16un1.ch[0] = PressSensor_Data[1]; // LSByte
       PressSensor_Raw = s16un1.uVal;
       PressSensor_volts = (PressSensor_Raw * PressSensor_Voltage_Span)/PressSensor_Numeric_Span; // Reading  Pressure in Voltage :)
-      PressSensor_eng = ((PressSensor_volts * PressSensor_Span_KPa)/PressSensor_Voltage_Span) - PressSensor_Max_KPa ; //engineering
+      PressSensor_eng = ((PressSensor_volts * PressSensor_Span_KPa)/PressSensor_Voltage_Span) - PressSensor_Max_KPa ;
       HAL_Delay(1000);
 
       //-------------------------------- Display Raw Pressure Data------------------------------------------------
@@ -206,11 +206,11 @@ int main(void)
       sprintf((char*)txt, "Raw Data: %02d , ", PressSensor_Raw);
       HAL_UART_Transmit(&huart2, txt, sizeof(txt), 10);
 
-      sprintf((char*)voltg, "Vout: %2d V , ", PressSensor_volts);
-       HAL_UART_Transmit(&huart2, voltg, sizeof(voltg), 20);
+      sprintf((char*)txt, "Vout: %f V , ", PressSensor_volts);
+       HAL_UART_Transmit(&huart2, txt, sizeof(txt), 20);
 
-      sprintf((char*)Pressure, "Pressure: %2d Kpa \r\n", PressSensor_eng);
-      HAL_UART_Transmit(&huart2, Pressure, sizeof(Pressure), 20);
+      sprintf((char*)txt, "Pressure: %f Kpa \r\n", PressSensor_eng);
+      HAL_UART_Transmit(&huart2, txt, sizeof(txt), 20);
       HAL_Delay(1000);
 
 
